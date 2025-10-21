@@ -1,0 +1,9 @@
+pyttsx3
+playsound
+pywin32
+psutil
+GPUtil
+SpeechRecognition
+requests
+TTS
+ollama-client
