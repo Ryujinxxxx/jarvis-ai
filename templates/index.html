@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jarvis AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="container">
+        <h1>Jarvis AI Assistant</h1>
+        <div id="chat-box"></div>
+        <input type="text" id="input-box" placeholder="Type your command..." />
+        <button onclick="sendCommand()">Send</button>
+        <button onclick="voiceCommand()">Voice</button>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const inputBox = document.getElementById('input-box');
+
+        function appendMessage(sender, message) {
+            chatBox.innerHTML += `<p><strong>${sender}:</strong> ${message}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendCommand() {
+            const prompt = inputBox.value;
+            if (!prompt) return;
+            appendMessage("You", prompt);
+            inputBox.value = "";
+
+            const response = await fetch("/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt })
+            });
+            const data = await response.json();
+            appendMessage("Jarvis", data.reply);
+        }
+
+        function voiceCommand() {
+            fetch("/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: "Voice command placeholder" })
+            }).then(response => response.json())
+              .then(data => appendMessage("Jarvis", data.reply));
+        }
+    </script>
+</body>
+</html>
